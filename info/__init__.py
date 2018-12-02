@@ -9,9 +9,10 @@ from config import config
 from flask import Flask
 
 # 初始化数据库
-
-
+# 在Flask 很多扩展里面都可以先初始化扩展的对象, 然后在去调用init_app方法
 db = SQLAlchemy()
+# 注释声明变量的类型. 这样解释器就知道他是什么类型的对象,那就可以代码提示了
+redis_store = None  # type: StrictRedis
 
 def setup_log(config_name):
     # 设置日志的记录等级
@@ -36,12 +37,13 @@ def create_app(config_name):
     # 通过app 初始化
     db.init_app(app)
     # 初始化redis存储对象
+    global redis_store
     redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT)
     # 开启当前项目 CSRF 保护，只做服务器验证功能
     CSRFProtect(app)
     Session(app)
 
-    # 注册蓝图
+    # 注册蓝图(什么时候注册什么时候导入, 避免了循环导入的问题)
     from info.modules.index import index_blu
     app.register_blueprint(index_blu)
 
