@@ -9,6 +9,8 @@ from config import config
 from flask import Flask
 
 # 初始化数据库
+
+
 db = SQLAlchemy()
 
 def setup_log(config_name):
@@ -38,5 +40,9 @@ def create_app(config_name):
     # 开启当前项目 CSRF 保护，只做服务器验证功能
     CSRFProtect(app)
     Session(app)
+
+    # 注册蓝图
+    from info.modules.index import index_blu
+    app.register_blueprint(index_blu)
 
     return app
