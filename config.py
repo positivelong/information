@@ -1,4 +1,8 @@
+import logging
+
 import redis
+
+
 
 class Config(object):
     """工程的配置信息"""
@@ -20,12 +24,16 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = 86400 # session 的有效期, 单位是秒
     SESSION_PERMANENT = False  # 设置需要过期
 
+    # 设置日志等级
+    LOG_LEVEL = logging.DEBUG
+
 class DevelopmentConfig(Config):
     """开发环境下的配置"""
     DEBUG = True
 class ProductionConfig(Config):
     """生产环境下的配置"""
     DEBUG = False
+    LOG_LEVEL = logging.WARNING
 class TestingConfig(Config):
     """单元测试环境下的配置"""
     DEBUG = True
